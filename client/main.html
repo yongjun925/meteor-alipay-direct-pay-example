@@ -1,0 +1,42 @@
+<head>
+  <title>meteor-alipay-direct-pay-example</title>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
+    <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+  <h1>meteor-alipay-direct-pay-example</h1>
+  <div class="col-xs-6">
+      {{> create_direct_pay_by_user}}
+  </div>
+</body>
+
+<template name="create_direct_pay_by_user">
+    <form role="form" action="/alipay/submit" target="_blank">
+        <div class="form-group">
+            <label for="partner">合作者身份ID(partner)</label>
+            <input type="text" class="form-control" name="partner" id="partner" placeholder="2088...">
+        </div>
+        <div class="form-group">
+            <label for="key">md5 key</label>
+            <input type="text" class="form-control" name="key" id="key" placeholder="key">
+        </div>
+
+        <div class="form-group">
+            <label for="out_trade_no">out_trade_no 商户网站唯一订单号</label>
+            <input type="text" class="form-control" name="out_trade_no" id="out_trade_no">
+        </div>
+        <div class="form-group">
+            <label for="subject">subject 商品名称</label>
+            <input type="text" class="form-control" name="subject" id="subject" placeholder="test付款">
+        </div>
+        <div class="form-group">
+            <label for="subject">total_fee 交易金额</label>
+            <input type="text" class="form-control" name="total_fee" id="total_fee">
+        </div>
+
+        <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+</template>
