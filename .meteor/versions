@@ -36,6 +36,10 @@ launch-screen@1.0.12
 livedata@1.0.18
 logging@1.1.15_1
 meteor@1.2.17_1
+<<<<<<< HEAD
+=======
+meteor-alipay-direct-pay@0.0.1
+>>>>>>> 8f205eaab1d6fb189ee0762a5f035db1f7bf10cc
 meteor-base@1.0.4
 minifier-css@1.2.14_1
 minifier-js@1.2.14_1

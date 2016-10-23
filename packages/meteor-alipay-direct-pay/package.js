@@ -37,5 +37,6 @@ Package.onTest(function(api) {
   api.use('ecmascript');
   api.use('tinytest');
   api.use('yongjun:meteor-alipay-direct-pay');
+  api.use(['momentjs:moment']);
   api.mainModule('meteor-alipay-direct-pay-tests.js');
 });
