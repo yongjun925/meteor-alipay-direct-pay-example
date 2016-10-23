@@ -21,6 +21,19 @@ Tinytest.add('Alipay.createDirectPayByUserUrl', function (test) {
     test.equal(url, 'https://mapi.alipay.com/gateway.do?_input_charset=UTF-8&notify_url=http://localhost:3000/alipay/create_direct_pay_by_user/notify_url&out_trade_no=1234567890&partner=2088202591916558&payment_type=1&return_url=http://localhost:3000/alipay/create_direct_pay_by_user/return_url&seller_id=2088202591916558&service=create_direct_pay_by_user&subject=test付款&total_fee=0.01&sign=82979d3cc02387e2efea60ea7d2f5e2a&sign_type=MD5');
 })
 
+Tinytest.add('Alipay directPayVerify', function (test) {
+    const res = {
+        end: function(data) {
+            console.log(data)
+        }
+    }
+    alipay.directPayVerify({
+        is_success: 'T',
+        sign_type: 'MD5',
+        sign: '53ceb6837e15a1f3c9cc13071ef44ccc'
+    }, res);
+})
+
 Tinytest.add('Alipay.refundFastpayByPlatformPwd', function (test) {
     const url = alipay.refundFastpayByPlatformPwd({
         refund_date: moment().format('YYYY-MM-DD HH:mm:ss'),
@@ -30,5 +43,4 @@ Tinytest.add('Alipay.refundFastpayByPlatformPwd', function (test) {
     });
     console.log(url)
     test.isTrue(url);
-
 })

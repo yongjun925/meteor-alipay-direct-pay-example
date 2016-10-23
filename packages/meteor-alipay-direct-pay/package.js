@@ -23,6 +23,10 @@ Package.onUse(function(api) {
     'server/alipay.js'
   ], 'server');
 
+  api.addAssets([
+    'private/cacert.pem'
+  ], 'server');
+
   api.export(['Alipay'],'server');
 });
 
