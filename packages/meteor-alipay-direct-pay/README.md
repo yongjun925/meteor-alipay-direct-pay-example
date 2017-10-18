@@ -1,8 +1,8 @@
 meteor alipay
 =========================
 
-即时到账交易接口(create_direct_pay_by_user)
-即时到账批量退款有密接口(refund_fastpay_by_platform_pwd)
+- 即时到账交易接口(create_direct_pay_by_user)
+- 即时到账批量退款有密接口(refund_fastpay_by_platform_pwd)
 
 ## Installation
 

@@ -16,6 +16,7 @@ Alipay = class extends EventEmitter {
             , create_direct_pay_by_user_return_url: '/alipay/create_direct_pay_by_user/return_url'
             , create_direct_pay_by_user_notify_url: '/alipay/create_direct_pay_by_user/notify_url'
             , refund_fastpay_by_platform_pwd_notify_url: '/alipay/refund_fastpay_by_platform_pwd/notify_url'
+            , batch_trans_notify_url: '/alipay/batch_trans/notify_url'
         }, config);
     }
 
@@ -61,7 +62,38 @@ Alipay = class extends EventEmitter {
         return Utils.build(params, this.config['key']);
     }
 
-    route(createDirectPayByUserReturn, createDirectPayByUserNotify, refundFastpayByPlatformPwdNotify) {
+    batchTransNotify(data) {
+        if (!(this.config['partner'] && this.config['key'])) {
+            return false;
+        }
+        if (!(data['account_name'] && data['detail_data'] && data['batch_no'] && data['batch_num'] && data['batch_fee'] && data['email'] && data['pay_date'])) {
+            return false;
+        }
+        const params = _.extend({
+            service: 'batch_trans_notify',
+            partner: this.config['partner'],
+            _input_charset: this.config['input_charset'],
+            sign_type: this.config['sign_type'],
+            notify_url: url.resolve(this.config.host, this.config.refund_fastpay_by_platform_pwd_notify_url)
+        }, data);
+        return Utils.build(params, this.config['key']);
+    }
+
+    route() {
+        let createDirectPayByUserReturn, createDirectPayByUserNotify, refundFastpayByPlatformPwdNotify,
+            batchTransNotify;
+        let args = Array.prototype.slice.call(arguments);
+        if (typeof args[0] == 'object') {
+            createDirectPayByUserReturn = args[0].createDirectPayByUserReturn;
+            createDirectPayByUserNotify = args[0].createDirectPayByUserNotify;
+            refundFastpayByPlatformPwdNotify = args[0].refundFastpayByPlatformPwdNotify;
+            batchTransNotify = args[0].batchTransNotify;
+        } else if (typeof args[0] == 'function') {
+            createDirectPayByUserReturn = args[0];
+            createDirectPayByUserNotify = args[1];
+            refundFastpayByPlatformPwdNotify = args[2];
+            batchTransNotify = args[3];
+        }
         if (this.config.create_direct_pay_by_user_return_url) {
             WebApp.connectHandlers.use(this.config.create_direct_pay_by_user_return_url,
                 createDirectPayByUserReturn || this._createDirectPayByUserReturn.bind(this));
@@ -73,6 +105,10 @@ Alipay = class extends EventEmitter {
         if (this.config.refund_fastpay_by_platform_pwd_notify_url) {
             WebApp.connectHandlers.use(this.config.refund_fastpay_by_platform_pwd_notify_url,
                 refundFastpayByPlatformPwdNotify || this._refundFastpayByPlatformPwdNotify.bind(this));
+        }
+        if (this.config.batch_trans_notify_url) {
+            WebApp.connectHandlers.use(this.config.batch_trans_notify_url,
+                batchTransNotify || this._batchTransNotify.bind(this));
         }
     }
 
@@ -164,4 +200,36 @@ Alipay = class extends EventEmitter {
         })
     }
 
+    _batchTransNotify(req, res, next) {
+        if (req.method === 'POST') {
+            this.batchTransNotifyVerify(req.body, function (result) {
+                if (result) {
+                    res.end('success');
+                } else {
+                    res.end('fail');
+                }
+            });
+        } else {
+            res.end('fail');
+        }
+    }
+
+    batchTransNotifyVerify(data, callback) {
+        if (!(data['batch_no'] && data['success_num'])) {
+            callback(false);
+            return false;
+        }
+        const self = this;
+        AlipayNotify.verify(data, this.config, function (verifyResult) {
+            if (verifyResult) {//验证成功
+                // 批次号 batch_no
+                self.emit('batch_trans_notify_success'
+                    , data['batch_no'], data);
+                callback(true);
+            } else {
+                //验证失败
+                callback(false);
+            }
+        })
+    }
 }
