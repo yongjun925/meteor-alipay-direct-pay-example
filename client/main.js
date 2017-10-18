@@ -1,22 +1,27 @@
-import { Template } from 'meteor/templating';
-import { ReactiveVar } from 'meteor/reactive-var';
+import {Template} from 'meteor/templating';
+import {ReactiveVar} from 'meteor/reactive-var';
 
 import './main.html';
 
-Template.hello.onCreated(function helloOnCreated() {
-  // counter starts at 0
-  this.counter = new ReactiveVar(0);
+Template.main.onCreated(function onCreated() {
+    // counter starts at 0
+    this.show_direct_pay = new ReactiveVar(true);
 });
 
-Template.hello.helpers({
-  counter() {
-    return Template.instance().counter.get();
-  },
+Template.main.helpers({
+    show_direct_pay() {
+        return Template.instance().show_direct_pay.get();
+    },
 });
 
-Template.hello.events({
-  'click button'(event, instance) {
-    // increment the counter when button is clicked
-    instance.counter.set(instance.counter.get() + 1);
-  },
+Template.main.events({
+    'click .nav-tabs>li'(event, instance) {
+        let role = instance.$(event.currentTarget).attr('role');
+        console.log(role)
+        if(role == 'old') {
+            instance.show_direct_pay.set(true);
+        } else if(role == 'new') {
+            instance.show_direct_pay.set(false);
+        }
+    },
 });

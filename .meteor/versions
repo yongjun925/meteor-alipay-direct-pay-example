@@ -73,4 +73,5 @@ underscore@1.0.10
 url@1.1.0
 webapp@1.3.19
 webapp-hashing@1.0.9
-yongjun:meteor-alipay-direct-pay@1.0.1
+yongjun:meteor-alipay-direct-pay@1.0.2
+yongjun:meteor-alipay-node-sdk-example@1.0.0

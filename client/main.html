@@ -1,5 +1,5 @@
 <head>
-  <title>meteor-alipay-direct-pay-example</title>
+  <title>meteor-alipay-example</title>
     <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
     <script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
@@ -7,13 +7,30 @@
 </head>
 
 <body>
-  <h1>meteor-alipay-direct-pay-example</h1>
-  <div class="col-xs-6">
-      {{> create_direct_pay_by_user}}
-  </div>
+{{> main}}
 </body>
 
+<template name="main">
+    <ul class="nav nav-tabs">
+        {{#if show_direct_pay}}
+            <li role="old" class="active"><a href="#">老版本支付宝接口</a></li>
+            <li role="new"><a href="#">新版本支付宝接口</a></li>
+        {{else}}
+            <li role="old"><a href="#">老版本支付宝接口</a></li>
+            <li role="new" class="active"><a href="#">新版本支付宝接口</a></li>
+        {{/if}}
+    </ul>
+    <div class="col-xs-6">
+        {{#if show_direct_pay}}
+            {{> create_direct_pay_by_user}}
+        {{else}}
+            {{> create_alipay_node_sdk_by_user}}
+        {{/if}}
+    </div>
+</template>
+
 <template name="create_direct_pay_by_user">
+    <h1>meteor-alipay-direct-pay-example</h1>
     <form role="form" action="/alipay/submit" target="_blank">
         <div class="form-group">
             <label for="partner">合作者身份ID(partner)</label>
@@ -39,4 +56,46 @@
 
         <button type="submit" class="btn btn-default">Submit</button>
     </form>
+</template>
+
+
+<template name="create_alipay_node_sdk_by_user">
+    <h1>meteor-alipay-node-sdk-example</h1>
+    <form role="form" action="/alipay-node-sdk/submit" target="_blank">
+        <div class="form-group">
+            <label for="appId">支付宝分配给开发者的应用Id(addId)</label>
+            <input type="text" class="form-control" name="appId" id="appId">
+        </div>
+
+        <div class="form-group">
+            <label for="sandbox">沙箱环境 OR 正式环境</label>
+            <select name="sandbox" id="sandbox">>
+                <option value="1">沙箱环境</option>
+                <option value="2" selected>正式环境</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="out_trade_no">out_trade_no 商户网站唯一订单号</label>
+            <input type="text" class="form-control" name="out_trade_no" id="out_trade_no">
+        </div>
+        <div class="form-group">
+            <label for="subject">subject 商品名称</label>
+            <input type="text" class="form-control" name="subject" id="subject" placeholder="test付款">
+        </div>
+        <div class="form-group">
+            <label for="body">body 商品描述</label>
+            <textarea type="text" class="form-control" name="body" id="body"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="total_amount">total_amount 交易总金额</label>
+            <input type="text" class="form-control" name="total_amount" id="total_amount">
+        </div>
+
+        <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+
+    <script>
+        document.querySelector('#out_trade_no').value = Date.now().toString();
+    </script>
 </template>
